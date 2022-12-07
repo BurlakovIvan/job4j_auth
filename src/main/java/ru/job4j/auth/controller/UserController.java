@@ -18,8 +18,15 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public void signUp(@RequestBody Person person) {
+        validate(person);
         person.setPassword(encoder.encode(person.getPassword()));
         users.save(person);
+    }
+
+    private void validate(Person person) {
+        if (person == null || person.getPassword().isEmpty() || person.getLogin().isEmpty()) {
+            throw new NullPointerException("Пользователь (логин или пароль) не может быть пустым");
+        }
     }
 
     @GetMapping("/all")
