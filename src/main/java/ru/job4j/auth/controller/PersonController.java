@@ -51,9 +51,13 @@ public class PersonController {
         validate(person);
         Person newPerson = persons.save(person);
         Optional<Person> findPerson = persons.findById(newPerson.getId());
-        return findPerson.isPresent()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().build();
+        if (findPerson.isPresent()) {
+            return ResponseEntity.ok().build();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Не удалось обновить данные пользователя"
+            );
+        }
     }
 
     @DeleteMapping("/{id}")
