@@ -51,28 +51,25 @@ public class PersonController {
         validate(person);
         Person newPerson = persons.save(person);
         Optional<Person> findPerson = persons.findById(newPerson.getId());
-        if (findPerson.isPresent()) {
-            return ResponseEntity.ok().build();
-        } else {
+        if (findPerson.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Не удалось обновить данные пользователя"
             );
         }
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
         validateId(id);
         Optional<Person> findPerson = persons.findById(id);
-        ResponseEntity<Void> result = ResponseEntity.ok().build();
-        if (findPerson.isPresent()) {
-            Person person = new Person();
-            person.setId(id);
-            persons.delete(person);
-        } else {
-           throw notFoundPerson();
+        if (findPerson.isEmpty()) {
+            throw notFoundPerson();
         }
-        return result;
+        Person person = new Person();
+        person.setId(id);
+        persons.delete(person);
+        return ResponseEntity.ok().build();
     }
 
     private void validate(Person person) {
