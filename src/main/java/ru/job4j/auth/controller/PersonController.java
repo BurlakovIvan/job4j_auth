@@ -65,7 +65,7 @@ public class PersonController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/")
+    @PutMapping("/map")
     public ResponseEntity<Void> update(@RequestBody Map<Integer, String> personDTO) {
         for (Map.Entry<Integer, String> person: personDTO.entrySet()) {
             validateId(person.getKey());
