@@ -60,8 +60,8 @@ public class PersonController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePassword(@RequestBody Map<Integer, String> personDTO) {
+    @PutMapping("/")
+    public ResponseEntity<Void> update(@RequestBody Map<Integer, String> personDTO) {
         for (Map.Entry<Integer, String> person: personDTO.entrySet()) {
             validateId(person.getKey());
             Optional<Person> findPerson = persons.findById(person.getKey());
