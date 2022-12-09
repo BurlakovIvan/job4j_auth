@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -55,6 +56,29 @@ public class PersonController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Не удалось обновить данные пользователя"
             );
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updatePassword(@RequestBody Map<Integer, String> personDTO) {
+        for (Map.Entry<Integer, String> person: personDTO.entrySet()) {
+            validateId(person.getKey());
+            Optional<Person> findPerson = persons.findById(person.getKey());
+            if (findPerson.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        String.format("Пользователь с идентификатором %s не найден!", person.getKey())
+                );
+            }
+            Person updatePerson = findPerson.get();
+            updatePerson.setPassword(person.getValue());
+            Person newPerson = persons.save(findPerson.get());
+            findPerson = persons.findById(newPerson.getId());
+            if (findPerson.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Не удалось обновить данные пользователя"
+                );
+            }
         }
         return ResponseEntity.ok().build();
     }
